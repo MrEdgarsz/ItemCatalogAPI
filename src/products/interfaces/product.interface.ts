@@ -1,6 +1,6 @@
 export interface Product {
   name: string;
-  imageSrc: number;
-  type: string;
+  imageSrc: string;
+  category: string;
   description: string;
 }
