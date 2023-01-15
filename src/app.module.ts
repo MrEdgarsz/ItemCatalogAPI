@@ -1,9 +1,9 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthModule } from "./auth/auth.module";
-import { User } from "./users/models/user.model";
-import { UsersModule } from "./users/users.module";
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { User } from './users/models/user.model';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import { UsersModule } from "./users/users.module";
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: "mysql",
+      type: 'mysql',
       host: process.env.DATABASE_HOST,
       port: parseInt(process.env.DATABASE_PORT),
       username: process.env.DATABASE_USERNAME,
