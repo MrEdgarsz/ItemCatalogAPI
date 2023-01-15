@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode } from '@nestjs/common';
 import {
   Get,
   Post,
@@ -12,7 +12,6 @@ import {
 } from '@nestjs/swagger';
 import { User } from '../../users/decorators/user.decorator';
 import { Secured } from '../decorators/secured.decorator';
-import { JwtGuard } from '../guards/jwt.guard';
 import { jwtTokenDTO as jwtTokenDto } from '../models/jwt_token.dto';
 import { LoginDTO as LoginDto } from '../models/login.dto';
 import { RegisterDto } from '../models/register.dto';
