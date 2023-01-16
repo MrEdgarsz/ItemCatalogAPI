@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductDto } from '../dto/product_dto';
+import { ProductDto } from '../dto/product.dto';
 import { Product } from '../models/product.model';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
-    private productsRepository: Repository<Product>,
-  ) { }
+    private productsRepository: Repository<ProductDto>,
+  ) {}
 
-  async getAllProducts(): Promise<Product[]> {
+  async getAllProducts(): Promise<ProductDto[]> {
     return await this.productsRepository.find();
   }
 
