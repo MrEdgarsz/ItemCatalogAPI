@@ -7,4 +7,7 @@ export class jwtTokenDTO {
 
   @ApiProperty()
   access_token: string;
+
+  @ApiProperty()
+  expires_at: Date = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 }
