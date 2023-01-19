@@ -28,6 +28,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
+  @Secured()
   @ApiOkResponse({
     type: [ProductDto],
     description: 'Return all products',
@@ -36,6 +37,7 @@ export class ProductsController {
     return await this.productsService.getAllProducts();
   }
 
+  @Secured()
   @ApiCreatedResponse({
     type: ProductDto,
     description: 'Added new product',
@@ -56,6 +58,8 @@ export class ProductsController {
     type: BadRequestException,
     description: 'Body does not match defined schema',
   })
+  @ApiNotFoundResponse()
+  @Secured()
   @Patch('/:id')
   async patchProduct(@Param('id') id: number, @Body() productDto: ProductDto) {
     await this.productsService.patchProduct(id, productDto);
