@@ -16,8 +16,8 @@ export class ProductsService {
     return await this.productsRepository.find();
   }
 
-  async addProduct(productDto: ProductDto) {
-    await this.productsRepository.save(productDto);
+  async add(productInputDto: ProductInputDto) {
+    return await this.productsRepository.insert(productInputDto);
   }
 
   async patchProduct(productId: number, productDto: ProductDto) {
