@@ -1,15 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUrl, MaxLength } from 'class-validator';
 
-import { Product } from '../models/product.model';
-
 export class ProductInputDto {
-  constructor(readonly product: Product) {
-    this.name = product.name;
-    this.image_src = product.image_src;
-    this.category = product.category;
-    this.description = product.description;
-  }
   @ApiProperty({
     description: 'Product name',
     type: String,
@@ -36,6 +28,7 @@ export class ProductInputDto {
   @ApiProperty({
     description: 'Product description',
     type: String,
+    default: 'Opis wspaniałej książki o szamanie z Władysławowic.',
   })
   @IsString()
   @MaxLength(250)
