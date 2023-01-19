@@ -24,6 +24,6 @@ export class AuthService {
   async register(email: string, password: string): Promise<jwtTokenDTO> {
     const passwordHash = await hash(password, 11);
     await this.usersService.create(email, passwordHash);
-    return this.login(email, passwordHash);
+    return this.login(email, password);
   }
 }
