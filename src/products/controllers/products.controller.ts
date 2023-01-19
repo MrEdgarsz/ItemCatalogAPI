@@ -16,6 +16,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Secured } from 'src/auth/decorators/secured.decorator';
 import { ProductDto } from '../dto/product.dto';
 import { ProductInputDto } from '../dto/product_input.dto';
 import { ProductsService } from '../services/products.service';
