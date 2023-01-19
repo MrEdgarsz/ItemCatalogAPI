@@ -10,7 +10,9 @@ import {
 import { BadRequestException } from '@nestjs/common/exceptions';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
