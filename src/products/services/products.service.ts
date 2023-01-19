@@ -20,7 +20,24 @@ export class ProductsService {
     return await this.productsRepository.insert(productInputDto);
   }
 
-  async patchProduct(productId: number, productDto: ProductDto) {
-    await this.productsRepository.update(productId, productDto);
+  async patch(productId: number, productInputDto: ProductInputDto) {
+    const findProduct = await this.productsRepository.findOneBy({
+      id: productId,
+    });
+    if (findProduct != null) {
+      return await this.productsRepository.update(productId, productInputDto);
+    } else {
+      throw new NotFoundException();
+    }
+  }
+  async delete(productId: number): Promise<void> {
+    const findProduct = await this.productsRepository.findOneBy({
+      id: productId,
+    });
+    if (findProduct != null) {
+      await this.productsRepository.remove(findProduct);
+    } else {
+      throw new NotFoundException();
+    }
   }
 }
