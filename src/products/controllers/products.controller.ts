@@ -22,6 +22,7 @@ import { ProductInputDto } from '../dto/product_input.dto';
 import { ProductsService } from '../services/products.service';
 
 @ApiTags('products')
+@ApiBearerAuth()
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
