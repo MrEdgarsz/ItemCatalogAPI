@@ -47,8 +47,8 @@ export class ProductsController {
     description: 'Body does not match defined schema',
   })
   @Post()
-  async addProduct(@Body() productDto: ProductDto) {
-    await this.productsService.addProduct(productDto);
+  async add(@Body() productInputDto: ProductInputDto) {
+    await this.productsService.add(productInputDto);
   }
   @ApiCreatedResponse({
     type: ProductInputDto,
