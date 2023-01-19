@@ -34,7 +34,7 @@ export class ProductsController {
     description: 'Return all products',
   })
   async getProducts(): Promise<ProductDto[]> {
-    return await this.productsService.getAllProducts();
+    return await this.productsService.getAll();
   }
 
   @Secured()
