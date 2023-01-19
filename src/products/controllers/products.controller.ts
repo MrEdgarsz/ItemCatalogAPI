@@ -61,7 +61,23 @@ export class ProductsController {
   @ApiNotFoundResponse()
   @Secured()
   @Patch('/:id')
-  async patchProduct(@Param('id') id: number, @Body() productDto: ProductDto) {
-    await this.productsService.patchProduct(id, productDto);
+  async patch(
+    @Param('id') id: number,
+    @Body() productInputDto: ProductInputDto,
+  ) {
+    await this.productsService.patch(id, productInputDto);
+  }
+  @ApiOkResponse({
+    description: 'Deleted product successfully',
+  })
+  @ApiBadRequestResponse({
+    type: BadRequestException,
+    description: 'Body does not match defined schema',
+  })
+  @ApiNotFoundResponse()
+  @Secured()
+  @Delete('/:id')
+  async delete(@Param('id') id: number) {
+    await this.productsService.delete(id);
   }
 }
