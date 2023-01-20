@@ -1,5 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass, plainToInstance } from 'class-transformer';
+import { ProductDto } from 'src/products/dto/product.dto';
+import { Product } from 'src/products/models/product.model';
 import { Repository } from 'typeorm/repository/Repository';
 import { User } from '../models/user.model';
 
@@ -35,6 +38,31 @@ export class UsersService {
   }
 
   async findById(id: number): Promise<User> {
-    return this.usersRepository.findOneBy({ id });
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: { favourites: true },
+    });
+  }
+  async setFavourite(user: User, productDto: ProductDto): Promise<void> {
+    console.log(
+      'something from users service at setFavourite with productId: ',
+      productDto.id,
+    );
+
+    const newFavourite = new Product();
+    newFavourite.id = productDto.id;
+    newFavourite.name = productDto.name;
+    newFavourite.image_src = productDto.image_src;
+    newFavourite.category = productDto.category;
+    newFavourite.description = productDto.description;
+    user.favourites = [newFavourite];
+    user.favourites.push(newFavourite);
+    await this.usersRepository.save(productDto);
+    console.log(await this.usersRepository.save(productDto));
+
+    // const findUser = await this.usersRepository.findOne({
+    //   where: { id: user.id },
+    //   relations: { favourites: true },
+    // });
   }
 }
