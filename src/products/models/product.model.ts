@@ -1,7 +1,9 @@
+import { User } from 'src/users/models/user.model';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -22,4 +24,6 @@ export class Product {
   created_at: Date;
   @UpdateDateColumn()
   updated_at: Date;
+  @ManyToMany(() => User)
+  users: User[];
 }
