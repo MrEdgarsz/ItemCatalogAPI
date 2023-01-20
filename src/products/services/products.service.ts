@@ -40,4 +40,14 @@ export class ProductsService {
       throw new NotFoundException();
     }
   }
+  async findById(productId: number): Promise<ProductDto> {
+    const findProduct = await this.productsRepository.findOneBy({
+      id: productId,
+    });
+    if (findProduct != null) {
+      return findProduct;
+    } else {
+      throw new NotFoundException();
+    }
+  }
 }
