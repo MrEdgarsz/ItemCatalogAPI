@@ -17,6 +17,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Secured } from 'src/auth/decorators/secured.decorator';
+import { User } from 'src/users/decorators/user.decorator';
+import { UsersService } from 'src/users/services/users.service';
 import { ProductDto } from '../dto/product.dto';
 import { ProductInputDto } from '../dto/product_input.dto';
 import { ProductsService } from '../services/products.service';
@@ -25,7 +27,10 @@ import { ProductsService } from '../services/products.service';
 @ApiBearerAuth()
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get()
   @Secured()
@@ -79,5 +84,48 @@ export class ProductsController {
   @Delete('/:id')
   async delete(@Param('id') id: number) {
     await this.productsService.delete(id);
+  }
+  @Get('/favourites')
+  @Secured()
+  @ApiOkResponse({
+    type: [ProductDto],
+    description: 'Return all favourites',
+  })
+  async getFavourites(@User() user): Promise<void> {
+    // const products =
+
+    console.log(user.favourites);
+  }
+  @Secured()
+  @ApiCreatedResponse({
+    type: ProductDto,
+    description: 'Added favourite product to user',
+  })
+  @ApiBadRequestResponse({
+    type: BadRequestException,
+    description: 'Body does not match defined schema',
+  })
+  @Post('/favourites/:id')
+  async setFavourite(
+    @Param('id') idProduct: number,
+    @User() user,
+  ): Promise<void> {
+    console.log('set favourite');
+    const product = await this.productsService.findById(idProduct);
+    await this.usersService.setFavourite(user, product);
+  }
+  @ApiOkResponse({
+    description: 'Deleted favourite product from user successfully',
+  })
+  @ApiBadRequestResponse({
+    type: BadRequestException,
+    description: 'Body does not match defined schema',
+  })
+  @ApiNotFoundResponse()
+  @Secured()
+  @Delete('/favourites/:id')
+  async unsetFavourite(@Param('id') id: number, @User() user): Promise<void> {
+    // await this.productsService.delete(id);
+    console.log('delete from favourite');
   }
 }
