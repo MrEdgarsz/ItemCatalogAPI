@@ -7,7 +7,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
