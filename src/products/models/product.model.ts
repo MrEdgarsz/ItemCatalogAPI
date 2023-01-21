@@ -24,6 +24,6 @@ export class Product {
   created_at: Date;
   @UpdateDateColumn()
   updated_at: Date;
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.favourites)
   users: User[];
 }
