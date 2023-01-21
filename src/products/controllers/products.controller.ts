@@ -110,7 +110,7 @@ export class ProductsController {
   })
   @Post('/favourites/:id')
   async setFavourite(
-    @Param('id') idProduct: number,
+    @Param('id') productId: number,
     @User() user,
   ): Promise<void> {
     console.log('set favourite');
