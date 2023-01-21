@@ -44,26 +44,31 @@ export class UsersService {
       relations: { favourites: true },
     });
   }
-  async setFavourite(user: User, productDto: ProductDto): Promise<void> {
-    console.log(
-      'something from users service at setFavourite with productId: ',
-      productDto.id,
-    );
-
-    const newFavourite = new Product();
-    newFavourite.id = productDto.id;
-    newFavourite.name = productDto.name;
-    newFavourite.image_src = productDto.image_src;
-    newFavourite.category = productDto.category;
-    newFavourite.description = productDto.description;
-    user.favourites = [newFavourite];
-    user.favourites.push(newFavourite);
-    await this.usersRepository.save(productDto);
-    console.log(await this.usersRepository.save(productDto));
-
-    // const findUser = await this.usersRepository.findOne({
-    //   where: { id: user.id },
-    //   relations: { favourites: true },
-    // });
+  async getFavourites(userId: number): Promise<Favourites[]> {
+    return await this.favouritesRepository.find({
+      relations: { products: true },
+      loadRelationIds: true,
+      where: { userId: userId },
+    });
+  }
+  async setFavourite(createFavourites: {
+    userId: number;
+    productId: number;
+  }): Promise<void> {
+    await this.favouritesRepository.save(createFavourites);
+  }
+  async unsetFavourite(deleteFavourite: {
+    userId: number;
+    productId: number;
+  }): Promise<void> {
+    const findFavourite = await this.favouritesRepository.findOneBy({
+      userId: deleteFavourite.userId,
+      productId: deleteFavourite.productId,
+    });
+    if (findFavourite != null) {
+      await this.favouritesRepository.remove(findFavourite);
+    } else {
+      throw new NotFoundException();
+    }
   }
 }
