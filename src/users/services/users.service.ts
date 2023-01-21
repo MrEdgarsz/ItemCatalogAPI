@@ -9,7 +9,9 @@ import { User } from '../models/user.model';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
+    @InjectRepository(Favourites)
+    private readonly favouritesRepository: Repository<Favourites>,
   ) {}
 
   async findByEmail(email: string): Promise<User | undefined> {
