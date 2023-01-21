@@ -131,7 +131,6 @@ export class ProductsController {
   @Secured()
   @Delete('/favourites/:id')
   async unsetFavourite(@Param('id') id: number, @User() user): Promise<void> {
-    // await this.productsService.delete(id);
-    console.log('delete from favourite');
+    await this.usersService.unsetFavourite({ userId: user.id, productId: id });
   }
 }
