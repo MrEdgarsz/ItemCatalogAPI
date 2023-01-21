@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common/exceptions';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass, plainToInstance } from 'class-transformer';
-import { ProductDto } from 'src/products/dto/product.dto';
-import { Product } from 'src/products/models/product.model';
+import { Favourites } from 'src/favourites/models/favourites.model';
 import { Repository } from 'typeorm/repository/Repository';
 import { User } from '../models/user.model';
 
