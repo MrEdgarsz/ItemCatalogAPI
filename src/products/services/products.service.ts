@@ -50,4 +50,9 @@ export class ProductsService {
       throw new NotFoundException();
     }
   }
+  async findMultiple(productIds: number[]): Promise<ProductDto[]> {
+    return await this.productsRepository.findBy({
+      id: In(productIds),
+    });
+  }
 }
