@@ -94,10 +94,10 @@ export class ProductsController {
     type: [ProductDto],
     description: 'Return all favourites',
   })
-  async getFavourites(@User() user): Promise<void> {
-    // const products =
-
-    console.log(user.favourites);
+  async getFavourites(@User() user): Promise<ProductDto[]> {
+    const favourites = await this.usersService.getFavourites(user.id);
+    const productIds = favourites.map((favourite) => favourite.productId);
+    return await this.productsService.findMultiple(productIds);
   }
   @Secured()
   @ApiCreatedResponse({
