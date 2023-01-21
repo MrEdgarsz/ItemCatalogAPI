@@ -7,7 +7,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -17,6 +20,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Secured } from 'src/auth/decorators/secured.decorator';
+import { User } from 'src/users/decorators/user.decorator';
+import { UsersService } from 'src/users/services/users.service';
 import { ProductDto } from '../dto/product.dto';
 import { ProductInputDto } from '../dto/product_input.dto';
 import { ProductsService } from '../services/products.service';
@@ -25,7 +30,10 @@ import { ProductsService } from '../services/products.service';
 @ApiBearerAuth()
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get()
   @Secured()
@@ -79,5 +87,50 @@ export class ProductsController {
   @Delete('/:id')
   async delete(@Param('id') id: number) {
     await this.productsService.delete(id);
+  }
+  @Get('/favourites')
+  @Secured()
+  @ApiOkResponse({
+    type: [ProductDto],
+    description: 'Return all favourites',
+  })
+  async getFavourites(@User() user): Promise<ProductDto[]> {
+    const favourites = await this.usersService.getFavourites(user.id);
+    const productIds = favourites.map((favourite) => favourite.productId);
+    return await this.productsService.findMultiple(productIds);
+  }
+  @Secured()
+  @ApiCreatedResponse({
+    type: ProductDto,
+    description: 'Added favourite product to user',
+  })
+  @ApiBadRequestResponse({
+    type: BadRequestException,
+    description: 'Body does not match defined schema',
+  })
+  @Post('/favourites/:id')
+  async setFavourite(
+    @Param('id') productId: number,
+    @User() user,
+  ): Promise<void> {
+    const product = await this.productsService.findById(productId);
+    if (product != null) {
+      await this.usersService.setFavourite({ userId: user.id, productId });
+    } else {
+      throw new NotFoundException();
+    }
+  }
+  @ApiOkResponse({
+    description: 'Deleted favourite product from user successfully',
+  })
+  @ApiBadRequestResponse({
+    type: BadRequestException,
+    description: 'Body does not match defined schema',
+  })
+  @ApiNotFoundResponse()
+  @Secured()
+  @Delete('/favourites/:id')
+  async unsetFavourite(@Param('id') id: number, @User() user): Promise<void> {
+    await this.usersService.unsetFavourite({ userId: user.id, productId: id });
   }
 }

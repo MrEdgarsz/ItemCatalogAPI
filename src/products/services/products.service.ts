@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ProductDto } from '../dto/product.dto';
 import { ProductInputDto } from '../dto/product_input.dto';
 import { Product } from '../models/product.model';
@@ -39,5 +39,20 @@ export class ProductsService {
     } else {
       throw new NotFoundException();
     }
+  }
+  async findById(productId: number): Promise<ProductDto> {
+    const findProduct = await this.productsRepository.findOneBy({
+      id: productId,
+    });
+    if (findProduct != null) {
+      return findProduct;
+    } else {
+      throw new NotFoundException();
+    }
+  }
+  async findMultiple(productIds: number[]): Promise<ProductDto[]> {
+    return await this.productsRepository.findBy({
+      id: In(productIds),
+    });
   }
 }
