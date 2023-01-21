@@ -20,8 +20,18 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @ManyToMany(() => Product, { cascade: true })
-  @JoinTable()
+  @ManyToMany(() => Product, (product) => product.users)
+  @JoinTable({
+    name: 'favourites',
+    joinColumn: {
+      name: 'userId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'productId',
+      referencedColumnName: 'id',
+    },
+  })
   favourites: Product[];
 
   @CreateDateColumn()
