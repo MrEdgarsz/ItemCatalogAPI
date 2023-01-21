@@ -113,9 +113,12 @@ export class ProductsController {
     @Param('id') productId: number,
     @User() user,
   ): Promise<void> {
-    console.log('set favourite');
-    const product = await this.productsService.findById(idProduct);
-    await this.usersService.setFavourite(user, product);
+    const product = await this.productsService.findById(productId);
+    if (product != null) {
+      await this.usersService.setFavourite({ userId: user.id, productId });
+    } else {
+      throw new NotFoundException();
+    }
   }
   @ApiOkResponse({
     description: 'Deleted favourite product from user successfully',
