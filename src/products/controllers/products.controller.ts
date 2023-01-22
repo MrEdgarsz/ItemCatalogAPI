@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   BadRequestException,
@@ -22,6 +23,7 @@ import {
 import { Secured } from 'src/auth/decorators/secured.decorator';
 import { User } from 'src/users/decorators/user.decorator';
 import { ProductDto } from '../dto/product.dto';
+import { ProductFilterDto } from '../dto/product_filter.dto';
 import { ProductInputDto } from '../dto/product_input.dto';
 import { ProductsService } from '../services/products.service';
 import { FavouritesService } from 'src/favourites/services/favourites.service';
@@ -41,8 +43,14 @@ export class ProductsController {
     type: [ProductDto],
     description: 'Return all products',
   })
-  async getProducts(): Promise<ProductDto[]> {
-    return await this.productsService.getAll();
+  async getProducts(
+    @Query() productFilterDto: ProductFilterDto,
+  ): Promise<ProductDto[]> {
+    if (productFilterDto) {
+      return this.productsService.getWithFilters(productFilterDto);
+    } else {
+      return await this.productsService.getAll();
+    }
   }
 
   @Secured()

@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { ProductDto } from '../dto/product.dto';
+import { ProductFilterDto } from '../dto/product_filter.dto';
 import { ProductInputDto } from '../dto/product_input.dto';
 import { Product } from '../models/product.model';
 
@@ -14,6 +15,25 @@ export class ProductsService {
 
   async getAll(): Promise<ProductDto[]> {
     return await this.productsRepository.find();
+  }
+
+  async getWithFilters(
+    productFilterDto: ProductFilterDto,
+  ): Promise<ProductDto[]> {
+    const { name, category, sort, order } = productFilterDto;
+    const whereStatement = {};
+    if (name) {
+      whereStatement['name'] = Like(`%${name}%`);
+    }
+    if (category) {
+      whereStatement['category'] = category;
+    }
+    return await this.productsRepository.find({
+      where: whereStatement,
+      order: {
+        [sort]: order,
+      },
+    });
   }
 
   async add(productInputDto: ProductInputDto) {
