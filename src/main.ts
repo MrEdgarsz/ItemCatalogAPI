@@ -4,7 +4,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+    cors: true,
+  });
   const config = new DocumentBuilder()
     .setTitle('Items Catalog API')
     .setDescription('simple API for a ItemCatalog app')

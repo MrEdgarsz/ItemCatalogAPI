@@ -1,28 +1,37 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsUrl } from 'class-validator';
-import { Product } from '../models/product.model';
+import { IsString, MaxLength } from 'class-validator';
 
 export class ProductDto {
-  constructor(readonly product: Product) {
-    this.id = product.id;
-    this.name = product.name;
-    this.image_src = product.image_src;
-    this.category = product.category;
-    this.description = product.description;
-  }
-  @ApiProperty()
-  @IsNumber()
-  id: number;
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Product name',
+    type: String,
+    default: 'Droga Szamana. Etap 1: Początek',
+  })
   @IsString()
+  @MaxLength(80)
   name: string;
-  @ApiProperty()
-  @IsUrl()
-  image_src: string;
-  @ApiProperty()
+
+  @ApiProperty({
+    description: 'Product image',
+    type: String,
+    format: 'binary',
+  })
+  image: Express.Multer.File;
+
+  @ApiProperty({
+    description: 'Product category',
+    type: String,
+    default: 'Ksiazka',
+  })
   @IsString()
   category: string;
-  @ApiProperty()
+
+  @ApiProperty({
+    description: 'Product description',
+    type: String,
+    default: 'Opis wspaniałej książki o szamanie z Władysławowic.',
+  })
   @IsString()
+  @MaxLength(250)
   description: string;
 }
