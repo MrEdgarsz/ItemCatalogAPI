@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/models/product.model';
 import { ProductsModule } from './products/products.module';
@@ -7,6 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './users/models/user.model';
 import { UsersModule } from './users/users.module';
 import { Favourites } from './favourites/models/favourites.model';
+import { FilesModule } from './files/files.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import path from 'path';
 
 @Module({
   imports: [
@@ -23,9 +27,11 @@ import { Favourites } from './favourites/models/favourites.model';
       entities: [User, Product, Favourites],
       synchronize: false,
     }),
+
     ProductsModule,
     AuthModule,
     UsersModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
