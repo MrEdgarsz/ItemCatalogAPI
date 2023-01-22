@@ -21,7 +21,7 @@ export class ProductInputDto {
   @ApiProperty({
     description: 'Product category',
     type: String,
-    default: 'Ksiazka',
+    default: 'Książka',
   })
   @IsString()
   category: string;
