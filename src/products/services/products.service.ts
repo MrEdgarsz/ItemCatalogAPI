@@ -21,7 +21,7 @@ export class ProductsService {
     productFilterDto: ProductFilterDto,
   ): Promise<ProductDto[]> {
     const { name, category, sort, order } = productFilterDto;
-   const whereStatement = {};
+    const whereStatement = {};
     if (name) {
       whereStatement['name'] = Like(`%${name}%`);
     }
@@ -30,13 +30,6 @@ export class ProductsService {
     }
     return await this.productsRepository.find({
       where: whereStatement,
-      order: {
-        [sort]: order,
-      },
-    });
-    }
-
-    return await this.productsRepository.find({
       order: {
         [sort]: order,
       },
