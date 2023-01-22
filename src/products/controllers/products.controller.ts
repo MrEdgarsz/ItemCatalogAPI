@@ -44,9 +44,9 @@ export class ProductsController {
     description: 'Return all products',
   })
   async getProducts(
-    @Query() productFilterDto: ProductFilterDto,
+    @Query() productFilterDto: ProductFilterDto?,
   ): Promise<ProductDto[]> {
-    if (Object.keys(productFilterDto).length) {
+    if (productFilterDto) {
       return this.productsService.getWithFilters(productFilterDto);
     } else {
       return await this.productsService.getAll();
