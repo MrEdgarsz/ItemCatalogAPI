@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { diskStorage } from 'multer';
-import path from 'path';
 import { FavouritesModule } from 'src/favourites/favourites.module';
 import { UsersModule } from 'src/users/users.module';
 import { ProductsController } from './controllers/products.controller';

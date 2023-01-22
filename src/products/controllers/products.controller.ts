@@ -8,6 +8,7 @@ import {
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseInterceptors,
@@ -23,7 +24,6 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { Secured } from 'src/auth/decorators/secured.decorator';
@@ -35,6 +35,7 @@ import { Product } from '../models/product.model';
 import { ConfigService } from '@nestjs/config';
 import { ProductImageTransformer } from 'src/files/pipes/product_image_transformer.pipe';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { ProductFilterDto } from '../dto/product_filter.dto';
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -52,8 +53,16 @@ export class ProductsController {
     type: [Product],
     description: 'Return all products',
   })
-  async getProducts(@Req() request): Promise<Product[]> {
-    const products = await this.productsService.getAll();
+  async getProducts(
+    @Query() productFilterDto: ProductFilterDto,
+    @Req() request,
+  ): Promise<Product[]> {
+    let products: Product[] = [];
+    if (productFilterDto) {
+      products = await this.productsService.getWithFilters(productFilterDto);
+    } else {
+      products = await this.productsService.getAll();
+    }
     return new ProductImageTransformer(request).transform(
       products,
     ) as Product[];

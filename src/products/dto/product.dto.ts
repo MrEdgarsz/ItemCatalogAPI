@@ -1,4 +1,3 @@
-import { FileTypeValidator, ParseFilePipe, UploadedFile } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MaxLength } from 'class-validator';
 
