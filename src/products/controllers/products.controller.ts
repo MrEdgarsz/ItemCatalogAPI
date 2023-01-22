@@ -21,10 +21,10 @@ import {
 } from '@nestjs/swagger';
 import { Secured } from 'src/auth/decorators/secured.decorator';
 import { User } from 'src/users/decorators/user.decorator';
-import { UsersService } from 'src/users/services/users.service';
 import { ProductDto } from '../dto/product.dto';
 import { ProductInputDto } from '../dto/product_input.dto';
 import { ProductsService } from '../services/products.service';
+import { FavouritesService } from 'src/favourites/services/favourites.service';
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -32,7 +32,7 @@ import { ProductsService } from '../services/products.service';
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
-    private readonly usersService: UsersService,
+    private readonly favouritesService: FavouritesService,
   ) {}
 
   @Get()
@@ -95,7 +95,7 @@ export class ProductsController {
     description: 'Return all favourites',
   })
   async getFavourites(@User() user): Promise<ProductDto[]> {
-    const favourites = await this.usersService.getFavourites(user.id);
+    const favourites = await this.favouritesService.getFavourites(user.id);
     const productIds = favourites.map((favourite) => favourite.productId);
     return await this.productsService.findMultiple(productIds);
   }
@@ -115,7 +115,7 @@ export class ProductsController {
   ): Promise<void> {
     const product = await this.productsService.findById(productId);
     if (product != null) {
-      await this.usersService.setFavourite({ userId: user.id, productId });
+      await this.favouritesService.setFavourite({ userId: user.id, productId });
     } else {
       throw new NotFoundException();
     }
@@ -131,6 +131,9 @@ export class ProductsController {
   @Secured()
   @Delete('/favourites/:id')
   async unsetFavourite(@Param('id') id: number, @User() user): Promise<void> {
-    await this.usersService.unsetFavourite({ userId: user.id, productId: id });
+    await this.favouritesService.unsetFavourite({
+      userId: user.id,
+      productId: id,
+    });
   }
 }
