@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './users/models/user.model';
 import { UsersModule } from './users/users.module';
 import { Favourites } from './favourites/models/favourites.model';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -23,9 +24,11 @@ import { Favourites } from './favourites/models/favourites.model';
       entities: [User, Product, Favourites],
       synchronize: false,
     }),
+
     ProductsModule,
     AuthModule,
     UsersModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
