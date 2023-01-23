@@ -48,7 +48,6 @@ export class ProductsController {
   ) {}
 
   @Get()
-  //@Secured()
   @ApiOkResponse({
     type: [Product],
     description: 'Return all products',
@@ -68,7 +67,7 @@ export class ProductsController {
     ) as Product[];
   }
 
-  // @Secured()
+  @Secured()
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({
     type: Product,
@@ -109,7 +108,7 @@ export class ProductsController {
   //Swagger end
   @ApiNotFoundResponse()
   @UseInterceptors(FileInterceptor('image'))
-  // @Secured()
+  @Secured()
   @Patch('/:id')
   async patch(
     @Param('id') id: number,
