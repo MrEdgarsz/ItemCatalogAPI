@@ -32,10 +32,12 @@ import { ProductDto } from '../dto/product.dto';
 import { ProductsService } from '../services/products.service';
 import { FavouritesService } from 'src/favourites/services/favourites.service';
 import { Product } from '../models/product.model';
-import { ConfigService } from '@nestjs/config';
 import { ProductImageTransformer } from 'src/files/pipes/product_image_transformer.pipe';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { ProductFilterDto } from '../dto/product_filter.dto';
+import { ProductFavourite } from '../models/product_favourite';
+import { ProductFavouriteImageTransformer } from 'src/files/pipes/product_favourite_image_transformer.pipe';
+import { ProductFavouriteFactory } from '../factories/product_favourite_factory';
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -44,7 +46,6 @@ export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
     private readonly favouritesService: FavouritesService,
-    private readonly configService: ConfigService,
   ) {}
 
   @Get()
@@ -65,6 +66,40 @@ export class ProductsController {
     return new ProductImageTransformer(request).transform(
       products,
     ) as Product[];
+  }
+
+  @Get('/product-favourites')
+  @ApiOkResponse({
+    type: [Product],
+    description: 'Return all products and favourites',
+  })
+  @Secured()
+  async getProductsWithFavourites(
+    @User() user,
+    @Req() request,
+  ): Promise<ProductFavourite[]> {
+    const products: Product[] = await this.productsService.getAll();
+    const favouritesIds = user.favourites.map((x) => x.id);
+    const productFavourite: ProductFavourite[] = [];
+    products.forEach((product) => {
+      productFavourite.push(
+        ProductFavouriteFactory.fromProduct(
+          product,
+          favouritesIds.includes(product.id),
+        ),
+      );
+    });
+    productFavourite.sort((a) => {
+      if (a.isFavourite) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+
+    return new ProductFavouriteImageTransformer(request).transform(
+      productFavourite,
+    ) as ProductFavourite[];
   }
 
   @Secured()
