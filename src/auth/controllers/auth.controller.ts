@@ -10,7 +10,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from '../../users/decorators/user.decorator';
+import { CurrentUser } from '../../users/decorators/user.decorator';
 import { Secured } from '../decorators/secured.decorator';
 import { jwtTokenDTO as jwtTokenDto } from '../models/jwt_token.dto';
 import { LoginDTO as LoginDto } from '../models/login.dto';
@@ -48,7 +48,7 @@ export class AuthController {
 
   @Secured()
   @Get('me')
-  me(@User() user): any {
+  me(@CurrentUser() user): any {
     return user;
   }
 }

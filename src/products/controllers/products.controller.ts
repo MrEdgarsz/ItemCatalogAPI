@@ -27,7 +27,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Secured } from 'src/auth/decorators/secured.decorator';
-import { User } from 'src/users/decorators/user.decorator';
+import { CurrentUser } from 'src/users/decorators/user.decorator';
 import { ProductDto } from '../dto/product.dto';
 import { ProductsService } from '../services/products.service';
 import { FavouritesService } from 'src/favourites/services/favourites.service';
@@ -75,7 +75,7 @@ export class ProductsController {
   })
   @Secured()
   async getProductsWithFavourites(
-    @User() user,
+    @CurrentUser() user,
     @Req() request,
   ): Promise<ProductFavourite[]> {
     const products: Product[] = await this.productsService.getAll();
@@ -185,7 +185,7 @@ export class ProductsController {
     type: [Product],
     description: 'Return all favourites',
   })
-  async getFavourites(@User() user, @Req() request): Promise<Product[]> {
+  async getFavourites(@CurrentUser() user, @Req() request): Promise<Product[]> {
     const favourites = await this.favouritesService.getFavourites(user.id);
     const productIds = favourites.map((favourite) => favourite.productId);
     const products = await this.productsService.findMultiple(productIds);
@@ -206,7 +206,7 @@ export class ProductsController {
   @Post('/favourites/:id')
   async setFavourite(
     @Param('id') productId: number,
-    @User() user,
+    @CurrentUser() user,
   ): Promise<void> {
     const product = await this.productsService.findById(productId);
     if (product != null) {
@@ -226,7 +226,10 @@ export class ProductsController {
   @ApiNotFoundResponse()
   @Secured()
   @Delete('/favourites/:id')
-  async unsetFavourite(@Param('id') id: number, @User() user): Promise<void> {
+  async unsetFavourite(
+    @Param('id') id: number,
+    @CurrentUser() user,
+  ): Promise<void> {
     await this.favouritesService.unsetFavourite({
       userId: user.id,
       productId: id,
