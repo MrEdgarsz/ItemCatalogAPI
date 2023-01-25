@@ -16,7 +16,6 @@ export class AuthService {
     const user = await this.usersService.findByEmailWithPassword(email);
     if (user && (await compare(password, user.password))) {
       const payload = new JwtPayload(user.email, user.id);
-      console.log(payload);
       const token = this.jwtService.sign({ payload });
       return new jwtTokenDTO(token);
     }
