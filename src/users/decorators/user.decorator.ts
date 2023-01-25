@@ -1,9 +1,10 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { UserByIdPipe } from '../pipes/user_by_id.pipe';
+import { User } from '../models/user.model';
 
-export const User = createParamDecorator(
+export const CurrentUser = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return request.user.id;
+    console.log(request.user);
+    return request.user as User;
   },
-).bind(null, undefined, UserByIdPipe);
+);
