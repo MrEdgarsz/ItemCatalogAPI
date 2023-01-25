@@ -19,7 +19,6 @@ import { ProductsService } from './services/products.service';
       useFactory: async (configService: ConfigService) => ({
         storage: diskStorage({
           destination: (req, file, cb) => {
-            console.log(configService.get<string>('FILE_STORAGE_PATH'));
             cb(null, configService.get<string>('FILE_STORAGE_PATH'));
           },
           filename: (req, file, cb) => {
