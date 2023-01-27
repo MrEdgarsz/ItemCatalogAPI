@@ -59,7 +59,7 @@ export class ProductsController {
   ): Promise<Product[]> {
     let products: Product[] = [];
     if (productFilterDto) {
-      products = await this.productsService.getWithFilters(productFilterDto);
+      products = await this.productsService.getAll(productFilterDto);
     } else {
       products = await this.productsService.getAll();
     }
@@ -75,11 +75,18 @@ export class ProductsController {
   })
   @Secured()
   async getProductsWithFavourites(
+    @Query() productFilterDto: ProductFilterDto,
     @CurrentUser() user,
     @Req() request,
   ): Promise<ProductFavourite[]> {
-    const products: Product[] = await this.productsService.getAll();
-    const favouritesIds = user.favourites.map((x) => x.id);
+    let products: Product[];
+    if (productFilterDto) {
+      products = await this.productsService.getAll(productFilterDto);
+    } else {
+      products = await this.productsService.getAll();
+    }
+
+    const favouritesIds = (user.favourites ?? []).map((x) => x.id);
     const productFavourite: ProductFavourite[] = [];
     products.forEach((product) => {
       productFavourite.push(

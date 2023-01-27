@@ -12,11 +12,7 @@ export class ProductsService {
     private productsRepository: Repository<Product>,
   ) {}
 
-  async getAll(): Promise<Product[]> {
-    return await this.productsRepository.find();
-  }
-
-  async getWithFilters(productFilterDto: ProductFilterDto): Promise<Product[]> {
+  async getAll(productFilterDto?: ProductFilterDto): Promise<Product[]> {
     const { name, category, sort, order } = productFilterDto;
     const whereStatement = {};
     if (name) {
