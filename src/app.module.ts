@@ -22,7 +22,7 @@ import { FilesModule } from './files/files.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: [User, Product, Favourites],
-      synchronize: true,
+      synchronize: false,
     }),
 
     ProductsModule,
